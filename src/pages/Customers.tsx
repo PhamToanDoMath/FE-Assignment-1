@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
+import { CSVLink } from "react-csv";
+
 import Table from '../components/table/Table'
 
 import customerList from '../assets/JsonData/customers-list.json'
@@ -8,12 +10,9 @@ import axios from '../utils/axios';
 
 const customerTableHead : Array<string> = [
     '',
-    'name',
-    'email',
-    'phone',
-    'total orders',
-    'total spend',
-    'location'
+    'Full Name',
+    'Date Of Birth',
+    'Location'
 ]
 
 const renderHead = (item : any, index : any) => <th key={index}>{item}</th>
@@ -22,10 +21,7 @@ const renderBody = (item : any, index : any) => (
     <tr key={index}>
         <td>{item.id}</td>
         <td>{item.name}</td>
-        <td>{item.email}</td>
-        <td>{item.phone}</td>
-        <td>{item.total_orders}</td>
-        <td>{item.total_spend}</td>
+        <td>{new Date().toISOString().substring(0, 10)}</td>
         <td>{item.location}</td>
     </tr>
 )
@@ -44,6 +40,7 @@ const Customers = () => {
     const [startDate, setStartDate] = useState<string>(currentDate);
     const [location, setLocation] = useState<string>('HCM');
     const [usersData, setUsersData] = useState<ICustomer>();
+    
     const onSubmit = async (e :any) => {
         e.preventDefault();
         const submitForm = JSON.stringify({
@@ -69,9 +66,9 @@ const Customers = () => {
         }
     }
 
-    function onDownload(e: any){
-        e.preventDefault();
-    }
+    // function onDownload(e: any){
+    //     e.preventDefault();
+    // }
 
 
     return (
@@ -106,24 +103,21 @@ const Customers = () => {
                                             <option value="DN">Da Nang</option>
                                     </select>
                                 </div>
-                                {/* <div className="search_categories">
-                                    <div className="select">
-                                        <select name="location" id="location">
-                                            <option value="HN">HN</option>
-                                            <option value="HCM">HCM</option>
-                                            <option value="DN">DN</option>
-                                        </select>
-                                    </div>
-                                </div> */}
                             </div>
                             <div className="col-3">
                                 <div className="row space-between">
                                     <button className="button blue-color" onClick={onSubmit}>
                                         Filter
                                     </button>
-                                    <button className="button cyan-color" onClick={onDownload}>
-                                        Downdload
-                                    </button>
+                                    <CSVLink className="button cyan-color"
+                                        data={customerList}
+                                        onClick={event => {
+                                            console.log("You click the link");
+                                            return true;
+                                        }}
+                                        >
+                                    Download as CSV
+                                    </CSVLink>
                                 </div>
                             </div>  
                         </form>
